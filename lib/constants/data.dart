@@ -12,6 +12,7 @@ class DummyData {
         name: 'Brie',
         shortDescription: "Sharp-tasting, natural cheese.",
         attributes: [Attributes.CREAMY],
+        fatScale: Scale.VERYHIGH,
         cheeseClass: Class.SOFT),
     Cheese(
         name: 'Camembert',
@@ -30,7 +31,23 @@ class DummyData {
         attributes: [Attributes.FIRM, Attributes.SPICY],
         facts: [
           "Sharpness increases with age.",
-          "Cloroing was originally added to distinguish where the Cheddar cheese was made."
+          "Coloring was originally added to distinguish where the Cheddar cheese was made."
+        ],
+        cheeseClass: Class.FIRM),
+    Cheese(
+        name: 'Gouda',
+        shortDescription: "Sweet, creamy, yellow cheese.",
+        longDescription:
+            "Gouda is a sweet, creamy, yellow cow's milk cheese originating from the Netherlands."
+            " It is one of the most popular cheeses worldwide.",
+        fatScale: Scale.HIGH,
+        textureScale: Scale.HIGH,
+        agingScale: Scale.HIGH,
+        proteinScale: Scale.VERYHIGH,
+        attributes: [Attributes.FIRM, Attributes.SPICY],
+        facts: [
+          "Gouda is named after a city in Holland.",
+          "Older Goudas are saltier and more pungent while young Gouda is mild and creamy."
         ],
         cheeseClass: Class.FIRM),
     Cheese(
@@ -104,4 +121,18 @@ class DummyData {
         .where((element) => element.attributes.contains(Attributes.CREAMY))
         .toList(),
   };
+
+  static List<String> recentSearches = [
+    "cheddar",
+    "emmental",
+    "brie",
+    "baldsad",
+    "parme"
+  ];
+
+  static List popularCheeses = [
+    cheeses[0],
+    cheeses[2],
+    cheeses[3],
+  ];
 }
