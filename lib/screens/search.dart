@@ -1,17 +1,15 @@
 import 'dart:async';
-
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cheesify/bloc/cheese_bloc.dart';
 import 'package:cheesify/constants/colors.dart';
 import 'package:cheesify/constants/data.dart';
-import 'package:cheesify/models/cheese.dart';
+import 'package:cheesify/widgets/cheese_card.dart';
 import 'package:cheesify/widgets/cheese_details.dart';
 import 'package:cheesify/widgets/recent_search_cheese.dart';
 import 'package:cheesify/widgets/search_cheese_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 Widget _flightShuttleBuilder(
   BuildContext flightContext,
@@ -35,7 +33,9 @@ class SearchCheese extends StatefulWidget {
 
 class _SearchCheeseState extends State<SearchCheese> {
   late FocusNode focusNode;
+  String query = "";
 
+  TextEditingController _searchController = new TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -54,35 +54,124 @@ class _SearchCheeseState extends State<SearchCheese> {
     return Scaffold(
         backgroundColor: ThemeColors.bgGrey,
         body: SafeArea(
-          child: Stack(
-            children: [
-              CustomBackButton(),
-              Positioned(
-                top: 20,
-                left: 80,
-                child: Hero(
-                  tag: 'search',
-                  flightShuttleBuilder: _flightShuttleBuilder,
-                  child: Container(
-                    width: Get.width * .7,
-                    child: CupertinoSearchTextField(
-                        focusNode: focusNode,
-                        placeholder: "Search cheese...",
-                        backgroundColor: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        padding: EdgeInsets.all(12),
-                        style: TextStyle(
-                            color: ThemeColors.primaryGrey, fontSize: 20)),
-                  ),
+            child: Stack(
+          children: [
+            CustomBackButton(),
+            Positioned(
+              top: 20,
+              left: 80,
+              child: Hero(
+                tag: 'search',
+                flightShuttleBuilder: _flightShuttleBuilder,
+                child: Container(
+                  width: Get.width * .7,
+                  child: CupertinoSearchTextField(
+                      controller: _searchController,
+                      focusNode: focusNode,
+                      placeholder: "Search cheese...",
+                      onSubmitted: (val) {
+                        submitCheeseName(context, val);
+                      },
+                      onSuffixTap: () {
+                        submitClearSearch(context);
+                        _searchController.clear();
+                      },
+                      backgroundColor: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      padding: EdgeInsets.all(12),
+                      style: TextStyle(
+                          color: ThemeColors.primaryGrey, fontSize: 20)),
                 ),
               ),
-              Positioned(
-                top: 80,
-                child: SearchContent(),
-              )
-            ],
-          ),
-        ));
+            ),
+            Positioned(
+              top: 80,
+              // child: BlocConsumer<CheeseCubit, CheeseState>( //cubit
+              child: BlocConsumer<CheeseBloc, CheeseState>(
+                //bloc
+                listener: (context, state) {
+                  if (state is CheeseError) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(state.error)));
+                  }
+                },
+                builder: (BuildContext context, CheeseState state) {
+                  if (state is CheeseInitial) {
+                    return buildInitialState(context);
+                  } else if (state is CheeseLoading) {
+                    return buildLoadingState();
+                  } else if (state is CheeseLoaded) {
+                    print("Cheese loaded!");
+                    return buildLoadedState(state);
+                  } else {
+                    //todo: ERROR
+                    return Container();
+                  }
+                },
+              ),
+            )
+          ],
+        )));
+  }
+
+  Container buildLoadingState() {
+    return Container(
+      width: Get.width,
+      height: Get.height * .8,
+      child: Center(
+          child: CircularProgressIndicator(
+        color: ThemeColors.primaryYellow,
+      )),
+    );
+  }
+
+  Padding buildLoadedState(CheeseLoaded state) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      child: Container(
+        height: Get.height,
+        width: Get.width,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Search results for ${state.query}"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30.0),
+                  child: CheeseSearchCard(cheese: state.cheese),
+                )
+              ]),
+        ),
+      ),
+    );
+  }
+
+  Widget buildInitialState(BuildContext context) {
+    return SearchContent();
+  }
+
+  submitCheeseName(BuildContext context, String value) {
+    // Cubit
+    // final cheeseCubit = context.read<CheeseBloc>();
+    // cheeseCubit.getCheese(value);
+
+    // Bloc version
+    final cheeseBloc = context.read<CheeseBloc>();
+    cheeseBloc.add(GetCheese(query));
+  }
+
+  void submitClearSearch(BuildContext context) {
+    //Cubit version
+    // final cheeseCubit = context.read<CheeseCubit>();
+    // cheeseCubit.clearQuery();
+
+    final cheeseBloc = context.read<CheeseBloc>();
+    cheeseBloc.add(ClearCheese());
   }
 }
 

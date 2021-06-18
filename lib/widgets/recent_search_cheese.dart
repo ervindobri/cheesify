@@ -1,4 +1,5 @@
 import 'package:cheesify/constants/colors.dart';
+import 'package:cheesify/constants/data.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -32,9 +33,15 @@ class RecentSearchCheese extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              FaIcon(
-                FontAwesomeIcons.times,
-                color: Colors.white,
+              InkWell(
+                onTap: () {
+                  print("Removed $query");
+                  DummyData.recentSearches.remove(this.query);
+                },
+                child: FaIcon(
+                  FontAwesomeIcons.times,
+                  color: Colors.white,
+                ),
               )
             ],
           ),

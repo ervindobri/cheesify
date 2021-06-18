@@ -28,8 +28,12 @@ class CheeseSearchCard extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                Image.asset(
-                  "assets/images/cheeses/" + cheese.name + '.png',
+                Container(
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("assets/images/cheeses/" +
+                              cheese.name +
+                              '.png'))),
                   width: 100,
                 ),
                 Padding(
