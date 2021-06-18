@@ -1,12 +1,17 @@
+import 'package:cheesify/bloc/cheese_bloc.dart';
 import 'package:cheesify/constants/colors.dart';
 import 'package:cheesify/constants/data.dart';
+import 'package:cheesify/cubit/cheese_cubit.dart';
+import 'package:cheesify/models/repositories/cheese_repository.dart';
 import 'package:cheesify/screens/search.dart';
 import 'package:cheesify/widgets/chipsfilter.dart';
 import 'package:cheesify/canvas_helpers/triangle_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' as bloc;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+// import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -68,7 +73,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     padding: const EdgeInsets.symmetric(
                         vertical: 25.0, horizontal: 25),
                     child: InkWell(
-                      onTap: () => Get.to(() => SearchCheese(),
+                      onTap: () => Get.to(
+                          () => bloc.BlocProvider(
+                              create: (context) =>
+                                  // CheeseCubit(FakeCheeseRepository()), //cubit
+                                  CheeseBloc(FakeCheeseRepository()), //bloc
+                              child: SearchCheese()),
                           transition: Transition.topLevel),
                       child: Hero(
                         tag: 'search',
