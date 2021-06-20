@@ -29,6 +29,8 @@ class ChipsFilter extends StatefulWidget {
 class _ChipsFilterState extends State<ChipsFilter> {
   late int selectedIndex;
 
+  late ScrollController scrollController;
+
   @override
   void initState() {
     if (widget.selected != null &&
@@ -37,6 +39,7 @@ class _ChipsFilterState extends State<ChipsFilter> {
       this.selectedIndex = widget.selected;
     }
     super.initState();
+    scrollController = new ScrollController();
   }
 
   @override
@@ -48,20 +51,23 @@ class _ChipsFilterState extends State<ChipsFilter> {
           width: Get.width,
           height: 70,
           child: ListView.builder(
-            itemBuilder: this.chipBuilder,
-            itemCount: widget.filters.length,
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-          ),
+              itemBuilder: this.chipBuilder,
+              controller: scrollController,
+              itemCount: widget.filters.length,
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true),
         ),
         AnimatedSwitcher(
           duration: Duration(milliseconds: 300),
           reverseDuration: Duration(milliseconds: 250),
           transitionBuilder: (Widget child, Animation<double> animation) {
-            return SlideTransition(
-                position: animation.drive(
-                    Tween(begin: Offset(.66, 0.0), end: Offset(0.0, 0.0))),
-                child: child);
+            return FadeTransition(
+              opacity: animation.drive(Tween(begin: -1.0, end: 1.0)),
+              child: ScaleTransition(
+                scale: animation.drive(Tween(begin: 0.77, end: 1.0)),
+                child: child,
+              ),
+            );
           },
           child: getCurrentCarousel(),
         ),
@@ -74,11 +80,19 @@ class _ChipsFilterState extends State<ChipsFilter> {
     bool isActive = this.selectedIndex == currentIndex;
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: currentIndex == 0
+          ? const EdgeInsets.only(
+              left: 25.0,
+              top: 8.0,
+              right: 8.0,
+              bottom: 8.0,
+            )
+          : const EdgeInsets.all(8.0),
       child: InkWell(
         onTap: () {
           setState(() {
             selectedIndex = currentIndex;
+            scrollController.jumpTo(selectedIndex * 70);
           });
         },
         child: Container(

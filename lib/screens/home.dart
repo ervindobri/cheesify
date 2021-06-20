@@ -1,4 +1,5 @@
-import 'package:cheesify/bloc/cheese_bloc.dart';
+import 'package:cheesify/bloc/recent_searches/recent_searches_bloc.dart';
+import 'package:cheesify/bloc/search/cheese_bloc.dart';
 import 'package:cheesify/constants/colors.dart';
 import 'package:cheesify/constants/data.dart';
 import 'package:cheesify/cubit/cheese_cubit.dart';
@@ -74,11 +75,19 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         vertical: 25.0, horizontal: 25),
                     child: InkWell(
                       onTap: () => Get.to(
-                          () => bloc.BlocProvider(
-                              create: (context) =>
-                                  // CheeseCubit(FakeCheeseRepository()), //cubit
-                                  CheeseBloc(FakeCheeseRepository()), //bloc
-                              child: SearchCheese()),
+                          () => bloc.MultiBlocProvider(
+                                  providers: [
+                                    bloc.BlocProvider<CheeseBloc>(
+                                      create: (BuildContext context) =>
+                                          CheeseBloc(FakeCheeseRepository()),
+                                    ),
+                                    bloc.BlocProvider<RecentSearchesBloc>(
+                                      create: (BuildContext context) =>
+                                          RecentSearchesBloc(
+                                              FakeCheeseRepository()),
+                                    ),
+                                  ], // CheeseCubit(FakeCheeseRepository()), //cubit//bloc
+                                  child: SearchCheese()),
                           transition: Transition.topLevel),
                       child: Hero(
                         tag: 'search',

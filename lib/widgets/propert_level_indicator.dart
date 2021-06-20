@@ -44,7 +44,7 @@ class PropertyLevelIndicator extends StatelessWidget {
         painter: CirclePainter(color: ThemeColors.primaryYellow),
       ));
     }
-    print("${this.propertyName} ${this.property}");
+    // print("${this.propertyName} ${this.property}");
     switch (this.property) {
       case Scale.VERYLOW:
         items[2] = CustomPaint(

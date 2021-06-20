@@ -19,7 +19,7 @@ class CheeseLoading extends CheeseState {
 //successful
 class CheeseLoaded extends CheeseState {
   final String query;
-  final Cheese cheese;
+  final List<Cheese> cheese;
   const CheeseLoaded(this.query, this.cheese);
 
   // always override equality because sometimes it may not emit new state..
