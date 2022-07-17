@@ -1,16 +1,11 @@
 # cheesify
 
-A new Flutter project.
+A cheese database app.
 
-## Getting Started
+## Technologies used:
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+ - dart;
+ - flutter;
+ - bloc.
+ 
+[<img src="https://cdn.dribbble.com/users/6987072/screenshots/15756620/media/50217449656d0027cf6298aed0168c19.png?compress=1&resize=1600x1200&vertical=top">](http://dribbble.com/)
