@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:cheesify/constants/data.dart';
 import 'package:cheesify/models/repositories/cheese_repository.dart';
 import 'package:meta/meta.dart';
 
